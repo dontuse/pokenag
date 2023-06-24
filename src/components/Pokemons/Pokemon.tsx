@@ -32,14 +32,14 @@ function Pokemon(props: Props) {
         <Box sx={{ height: 90 }}>
           {loading ? (
             <>
-              <Skeleton sx={{ fontSize: 30, mb: 2 }} animation="wave" />
+              <Skeleton sx={{ mb: 2 }} animation="wave" />
               <Skeleton animation="wave" />
               <Skeleton animation="wave" />
             </>
           ) : (
             <Fade timeout={400} in={!loading}>
               <Box>
-                <Typography sx={{ mb: 2 }} variant="h6">
+                <Typography sx={{ mb: 2 }} variant="body1">
                   {props.name}
                 </Typography>
                 <Typography variant="body1">

@@ -36,6 +36,10 @@ export default function BasicCard() {
     keepPreviousData: true,
   });
 
+  if (error) {
+    return <div>Покемон не сумел {"\u{1f642}"} ,пика пика...<Link href={'/'}>Перезагрузить</Link></div>;
+  }
+
   const pagesCount = data?.count ? Math.ceil(data.count / limit) : 0;
 
   let pokemons: PokemonV[] =
@@ -45,12 +49,8 @@ export default function BasicCard() {
     })) || [];
 
 
-  if (error) {
-    return <div>Покемон не сумел {"\u{1f642}"} ,пика пика...<Link href={'/'}>Перезагрузить</Link></div>;
-  }
-
   function paginate(event: ChangeEvent<unknown>, page: number) {
-    setOffset(page);
+    setOffset((page - 1) * limit);
   }
 
   return (
