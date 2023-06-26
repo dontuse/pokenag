@@ -5,11 +5,8 @@ import useSWR from "swr";
 const fetcher = (path: string) => fetch(path).then((res) => res.json());
 
 type Props = {
-  name?: string;
-  url?: string;
-  height?: number;
-  weight?: number;
-  isLoading?: boolean;
+  url: string;
+  isLoading: boolean;
 };
 
 type Res = {
@@ -23,8 +20,7 @@ function Pokemon(props: Props) {
     keepPreviousData: true,
   });
   const loading = props.isLoading || isLoading;
-  const weight = data?.weight || props.height;
-  const height = data?.height || props.height;
+  const { weight = "", height = "", name = "" } = data || {};
 
   return (
     <Card>
@@ -41,7 +37,7 @@ function Pokemon(props: Props) {
               <Box>
                 <Box>
                   <Typography sx={{ mb: 1, height: 45, textOverflow: "ellipsis", lineHeight: 1.1 }} variant="body1">
-                    {props.name}
+                    {name}
                   </Typography>
                 </Box>
                 <Typography variant="body1">

@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import Grid from "@mui/material/Grid";
 import useSWR from "swr";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useCallback } from "react";
 import Pokemon from "./Pokemon";
 import Link from "next/link";
 
@@ -22,44 +22,36 @@ type Pokemon = {
   url: string;
 };
 
-type PokemonV = {
-  name?: string;
-  url?: string;
-  key: string;
-};
-
 const limit = 12;
 
-export default function BasicCard() {
+export default function Pokemons() {
   const [offset, setOffset] = useState(0);
   const { data, error, isLoading } = useSWR<PokemonsRes>(`/pokemon?limit=${limit}&offset=${offset}`, fetcher, {
     keepPreviousData: true,
   });
+
+  const paginate = useCallback(
+    function paginate(event: ChangeEvent<unknown>, page: number) {
+      setOffset((page - 1) * limit);
+    },
+    [],
+  )
 
   if (error) {
     return <div>Покемон не сумел {"\u{1f642}"} ,пика пика...<Link href={'/'}>Перезагрузить</Link></div>;
   }
 
   const pagesCount = data?.count ? Math.ceil(data.count / limit) : 0;
+  const pokemons = data?.results || [];
 
-  let pokemons: PokemonV[] =
-    data?.results.map((p) => ({
-      ...p,
-      key: p.url,
-    })) || [];
-
-
-  function paginate(event: ChangeEvent<unknown>, page: number) {
-    setOffset((page - 1) * limit);
-  }
 
   return (
     <Box>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box>
         <Grid container spacing={2}>
           {pokemons.map((pokemon) => (
-            <Grid item xs={6}  md={2} key={pokemon.key}>
-              <Pokemon name={pokemon.name} url={pokemon.url} isLoading={isLoading} />
+            <Grid item xs={6}  md={2} key={pokemon.url}>
+              <Pokemon url={pokemon.url} isLoading={isLoading} />
             </Grid>
           ))}
         </Grid>
